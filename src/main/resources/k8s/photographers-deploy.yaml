@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: photographers
+  name: photographers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: photographers
+  template:
+    metadata:
+      labels:
+        app: photographers
+    spec:
+      containers:
+        - image: mirasap/photographers:0.0.1
+          imagePullPolicy: Always
+          name: photographers
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: photographers-config
+                  key: dbHost
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: photographers-config
+                  key: dbName
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secrets
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secrets
+                  key: password
+            - name: JAVA_OPTS
+              valueFrom:
+                configMapKeyRef:
+                  name: photographers-config
+                  key: javaOpts
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: photographers-config
+                  key: redisHost
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: photographers-config
+                  key: redisPort
+            - name: REDIS_TTL_MINUTES
+              valueFrom:
+                configMapKeyRef:
+                  name: photographers-config
+                  key: redisTtlMinutes
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: photographers
+spec:
+  selector:
+    app: photographers
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+  type: NodePort
