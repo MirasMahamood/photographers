@@ -47,10 +47,15 @@ public class PhotographerControllerIntegrationTest {
     @Test
     @WithMockUser("miras")
     void getPhotographerByIdSuccessfully() throws Exception {
+        mockMvc.perform(post(API_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"http://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("John Doe"));
         mockMvc.perform(get(API_URL + "/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("John Doe"));
+                .andExpect(jsonPath("$.id").value(1L));
     }
 
     @Test
@@ -61,7 +66,7 @@ public class PhotographerControllerIntegrationTest {
                         .param("page", "0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.photographers").exists())
-                .andExpect(jsonPath("$.totalItems").value(1))
+                .andExpect(jsonPath("$.totalItems").value(2))
                 .andExpect(jsonPath("$.currentPage").value(0))
                 .andExpect(jsonPath("$.hasNext").value(false));
     }
