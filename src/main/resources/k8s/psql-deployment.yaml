@@ -27,7 +27,7 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: photographers-config
+                  name: photo-config
                   key: dbName
           ports:
             - containerPort: 5432

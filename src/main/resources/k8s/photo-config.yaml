@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: photographers-config
+  name: photo-config
 data:
   dbHost: "postgresql"
   dbName: "postgres"
   redisHost: "redis-cache"
   redisPort: "6379"
+  redisTimeout: "100"
   redisTtlMinutes: "60"
   javaOpts: "-Xmx128m"

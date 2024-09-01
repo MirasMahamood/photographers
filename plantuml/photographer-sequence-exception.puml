@@ -1,0 +1,16 @@
+@startuml
+actor User
+participant "PhotographerController" as PC
+participant "PhotographerService" as PS
+participant "PhotographerRepository" as PR
+participant "GlobalExceptionHandler" as GE
+database DB
+User -> PC : GET /api/v1/photographers/{id}
+PC -> PS : getPhotographerById(id)
+PS -> PR : findById(id)
+PR -> DB : select from table
+DB --> PR : Empty result
+PR --> PS : return empty Photographer
+PS --> GE : handleResourceNotFoundException
+GE --> User : return ErrorResponse
+@enduml

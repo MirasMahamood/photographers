@@ -1,0 +1,196 @@
+@startuml
+skinparam defaultFontSize 35
+skinparam nodesep 10
+skinparam ranksep 40
+class PhotographersApplication {
+    {static} main(String[] args)
+}
+package "Configurations" {
+    class CachingConfig {
+        +errorHandler(): CacheErrorHandler
+    }
+    class JpaConfig {
+    }
+    class RedisConfig {
+      String redisHost
+      int redisPort
+      int ttlMinutes
+      --
+      +redisConnectionFactory()
+      +cacheManager(RedisConnectionFactory)
+    }
+    class SecurityConfig {
+      --
+      +passwordEncoder()
+      +securityFilterChain(HttpSecurity)
+      +userDetailsService()
+      +authenticationProvider()
+    }
+    CachingConfig -[hidden]d- "JpaConfig"
+    "JpaConfig" -[hidden]d- "RedisConfig"
+     "RedisConfig" -[hidden]d- "SecurityConfig"
+}
+package "Controllers" {
+    class EventTypeController {
+      --
+      +createEventType(EventType)
+      +getAllEventTypes()
+      +getEventTypeById(Long)
+      +updateEventType(Long, EventType)
+      +deleteEventType(Long)
+    }
+    class PhotographerController {
+      --
+      +createPhotographer(Photographer)
+      +getAllPhotographers(int)
+      +getPhotographerById(Long)
+      +getAllPhotographersByEventType(Long, int)
+      +updatePhotographer(Long, Photographer)
+      +deletePhotographer(Long)
+    }
+    class UserController {
+        --
+        +registerUser(User)
+    }
+    "EventTypeController" -[hidden]d- "PhotographerController"
+    "PhotographerController" -[hidden]d- "UserController"
+}
+package "Services" {
+    interface EventTypeService {
+      --
+      +saveEventType(EventType)
+      +getAllEventTypes()
+      +getEventTypeById(Long)
+      +deleteEventType(Long)
+      +updateEventType(Long, EventType)
+    }
+    interface PhotographerService {
+      --
+      +savePhotographer(Photographer)
+      +getAllPhotographers(int)
+      +getPhotographerById(Long)
+      +getAllPhotographersByEventType(Long, int)
+      +updatePhotographer(Long, Photographer)
+      +deletePhotographer(Long)
+    }
+    interface UserService {
+      --
+      +registerUser(User)
+    }
+    class EventTypeServiceImpl {
+      --
+        +saveEventType(EventType)
+        +getAllEventTypes()
+        +getEventTypeById(Long)
+        +deleteEventType(Long)
+        +updateEventType(Long, EventType)
+    }
+    class PhotographerServiceImpl {
+      --
+      +savePhotographer(Photographer)
+      +getAllPhotographers(int)
+      +getPhotographerById(Long)
+      +getAllPhotographersByEventType(Long, int)
+      +updatePhotographer(Long, Photographer)
+      +deletePhotographer(Long)
+    }
+    class UserServiceImpl {
+      --
+      +registerUser(User)
+    }
+    class CustomUserDetailsService {
+      --
+      +loadUserByUsername(String): UserDetails
+    }
+    class EventTypeServiceImpl implements EventTypeService
+    class PhotographerServiceImpl implements PhotographerService
+    class UserServiceImpl implements UserService
+    class CustomUserDetailsService implements UserDetailsService
+    EventTypeServiceImpl -[hidden]d- "PhotographerService"
+    PhotographerServiceImpl -[hidden]d- "UserService"
+    UserServiceImpl -[hidden]d- "UserDetailsService"
+}
+package "Repositories" {
+    interface EventTypeRepository {
+      --
+      +findByName(Pageable)
+    }
+    interface PhotographerRepository {
+      --
+      +findAllBy(Pageable)
+      +findAllByEventType(EventType, Pageable)
+    }
+    interface UserRepository {
+      --
+      +findByUsername(String)
+    }
+    EventTypeRepository -[hidden]d- "PhotographerRepository"
+    PhotographerRepository -[hidden]d- "UserRepository"
+}
+package "Models" {
+    class EventType {
+      Long id
+      String name
+    }
+    class Photographer {
+        Long id
+        String name
+        String description
+        String contact
+        String avatar
+        EventType eventType
+    }
+    abstract class AuditModel {
+      Instant createdDate
+      Instant modifiedDate
+    }
+    class User {
+      Long id
+      String username
+      String password
+    }
+    AuditModel <|-- Photographer
+    EventType <|-- Photographer
+    "Photographer" -[hidden]d- "User"
+}
+"PhotographersApplication" -[hidden]d- "CachingConfig"
+"Configurations" -[hidden]r- "Controllers"
+"Controllers" -[hidden]r- "Services"
+"Services" -[hidden]r- "Repositories"
+"Repositories" -[hidden]r- "Models"
+newpage
+package "Exceptions" {
+    class ErrorMessages {
+      {static} String ERROR_EVENT_TYPE_EXISTS
+      {static} String ERROR_EVENT_TYPE_NOT_FOUND
+      {static} String ERROR_PHOTOGRAPHER_NOT_FOUND
+      {static} String ERROR_USER_EXISTS
+    }
+
+    class ErrorResponse {
+      int statusCode
+      String message
+      --
+      +getStatusCode(): int
+      +getMessage(): String
+    }
+
+    class GlobalExceptionHandler {
+      --
+      +handleResourceNotFoundException(ResourceNotFoundException)
+      +handleResourceAlreadyExistsException(ResourceAlreadyExistsException)
+      +handleMethodArgumentNotValidException(MethodArgumentNotValidException)
+      +handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException)
+      +handleRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException)
+      +handleHttpMessageNotReadableException(HttpMessageNotReadableException)
+      +handleCommonException(Exception): ResponseEntity<ErrorResponse>
+    }
+
+    class ResourceAlreadyExistsException {
+    }
+
+    class ResourceNotFoundException {
+    }
+}
+
+@enduml

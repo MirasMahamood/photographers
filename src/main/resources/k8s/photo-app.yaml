@@ -2,35 +2,35 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: photographers
-  name: photographers
+    app: photo-app
+  name: photo-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: photographers
+      app: photo-app
   template:
     metadata:
       labels:
-        app: photographers
+        app: photo-app
     spec:
       containers:
         - image: mirasap/photographers:0.0.1
           imagePullPolicy: Always
-          name: photographers
+          name: photo-app
           ports:
-            - containerPort: 8080
+            - containerPort: 8081
               protocol: TCP
           env:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: photographers-config
+                  name: photo-config
                   key: dbHost
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: photographers-config
+                  name: photo-config
                   key: dbName
             - name: DB_USER
               valueFrom:
@@ -45,33 +45,38 @@ spec:
             - name: JAVA_OPTS
               valueFrom:
                 configMapKeyRef:
-                  name: photographers-config
+                  name: photo-config
                   key: javaOpts
             - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: photographers-config
+                  name: photo-config
                   key: redisHost
             - name: REDIS_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: photographers-config
+                  name: photo-config
                   key: redisPort
+            - name: REDIS_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: photo-config
+                  key: redisTimeout
             - name: REDIS_TTL_MINUTES
               valueFrom:
                 configMapKeyRef:
-                  name: photographers-config
+                  name: photo-config
                   key: redisTtlMinutes
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: photographers
+  name: photo-app
 spec:
   selector:
-    app: photographers
+    app: photo-app
   ports:
     - protocol: "TCP"
-      port: 8080
-      targetPort: 8080
+      port: 8081
+      targetPort: 8081
   type: NodePort

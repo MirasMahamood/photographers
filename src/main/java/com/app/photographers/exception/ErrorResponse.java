@@ -1,20 +1,5 @@
 package com.app.photographers.exception;
 
-public class ErrorResponse {
+public record ErrorResponse(int statusCode, String message) {
 
-    private final int statusCode;
-    private final String message;
-
-    public ErrorResponse(int statusCode, String message) {
-        this.statusCode = statusCode;
-        this.message = message;
-    }
-
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }

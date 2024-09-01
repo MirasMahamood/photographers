@@ -1,0 +1,16 @@
+@startuml
+actor User
+participant "PhotographerController" as PC
+participant "PhotographerService" as PS
+participant "PhotographerRepository" as PR
+database DB
+
+User -> PC : POST /api/v1/photographers
+PC -> PS : createPhotographer(Photographer)
+PS -> PR : savePhotographer(Photographer)
+PR -> DB : insert into table
+DB --> PR : Photographer saved
+PR --> PS : return saved Photographer
+PS --> PC : return saved Photographer
+PC --> User : return saved Photographer
+@enduml

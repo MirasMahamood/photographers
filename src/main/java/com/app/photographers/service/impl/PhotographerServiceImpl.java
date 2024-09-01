@@ -70,14 +70,14 @@ public class PhotographerServiceImpl implements PhotographerService {
 
     @CachePut(value = "photographer", key = "#id")
     @Override
-    public void updatePhotographer(Long id, Photographer photographer) {
+    public Photographer updatePhotographer(Long id, Photographer photographer) {
         Photographer _photographer = getPhotographerById(id);
         _photographer.setName(photographer.getName());
         _photographer.setAvatar(photographer.getAvatar());
         _photographer.setContact(photographer.getContact());
         _photographer.setDescription(photographer.getDescription());
         _photographer.setEventType(photographer.getEventType());
-        photographerRepository.save(_photographer);
+        return photographerRepository.save(_photographer);
     }
 
     private Pageable getPageable(int page) {

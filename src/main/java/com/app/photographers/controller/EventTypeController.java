@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "api/event-types")
+@RequestMapping(value = "api/v1/event-types")
 @AllArgsConstructor
 public class EventTypeController {
 

@@ -33,8 +33,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/swagger-ui/**", "v3/api-docs/**", "api/user/register").permitAll()
-                        .requestMatchers("api/event-types/**", "/api/photographers/**", "api/user/**").authenticated()
+                        .requestMatchers("/swagger-ui/**", "v3/api-docs/**", "api/v1/user/register", "/api/data/generateData").permitAll()
+                        .requestMatchers("api/v1/event-types/**", "/api/v1/photographers/**", "api/v1/user/**").authenticated()
                         .dispatcherTypeMatchers(DispatcherType.ERROR).authenticated()
                         .anyRequest().denyAll())
                 .csrf(AbstractHttpConfigurer::disable)

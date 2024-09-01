@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/photographers")
+@RequestMapping("api/v1/photographers")
 @AllArgsConstructor
 public class PhotographerController {
 
@@ -37,6 +37,16 @@ public class PhotographerController {
     public Map<String, Object> getAllPhotographersByEventType(@PathVariable Long id, @RequestParam(defaultValue = "0") int page) {
         Slice<Photographer> photographers = photographerService.getAllPhotographersByEventType(id, page);
         return generateGetAllResponse(photographers);
+    }
+
+    @PutMapping("/{id}")
+    public Photographer updatePhotographer(@PathVariable Long id, @Valid @RequestBody Photographer photographer) {
+        return photographerService.updatePhotographer(id, photographer);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletePhotographer(@PathVariable Long id) {
+        photographerService.deletePhotographer(id);
     }
 
     private Map<String, Object> generateGetAllResponse(Slice<Photographer> photographers) {

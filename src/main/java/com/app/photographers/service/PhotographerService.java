@@ -5,15 +5,15 @@ import org.springframework.data.domain.Slice;
 
 public interface PhotographerService {
 
-            Photographer savePhotographer(Photographer photographer);
+    Photographer savePhotographer(Photographer photographer);
 
-            Slice<Photographer> getAllPhotographers(int page);
+    Slice<Photographer> getAllPhotographers(int page);
 
-            Photographer getPhotographerById(Long id);
+    Photographer getPhotographerById(Long id);
 
-            Slice<Photographer> getAllPhotographersByEventType(Long eventTypeId, int page);
+    Slice<Photographer> getAllPhotographersByEventType(Long eventTypeId, int page);
 
-            void deletePhotographer(Long id);
+    void deletePhotographer(Long id);
 
-            void updatePhotographer(Long id, Photographer photographer);
+    Photographer updatePhotographer(Long id, Photographer photographer);
 }
