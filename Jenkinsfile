@@ -32,7 +32,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    sh 'kubectl apply -f ./build/resources/main/k8s/photographers-deploy.yaml'
+                    sh 'kubectl apply -f ./build/resources/main/k8s/photo-app.yaml'
                 }
             }
         }
