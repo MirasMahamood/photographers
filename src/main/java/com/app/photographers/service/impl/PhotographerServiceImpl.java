@@ -81,6 +81,6 @@ public class PhotographerServiceImpl implements PhotographerService {
     }
 
     private Pageable getPageable(int page) {
-        return PageRequest.of(page, pageSize, Sort.by("createdDate").descending());
+        return PageRequest.of(page, pageSize, Sort.by("modifiedDate").descending());
     }
 }

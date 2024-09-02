@@ -1,8 +1,7 @@
-package com.app.photographers.unit;
+package com.app.photographers.unit.controller;
 
 import com.app.photographers.controller.PhotographerController;
 import com.app.photographers.exception.ErrorMessages;
-import com.app.photographers.exception.ResourceAlreadyExistsException;
 import com.app.photographers.exception.ResourceNotFoundException;
 import com.app.photographers.model.Photographer;
 import com.app.photographers.service.PhotographerService;
@@ -14,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.Collections;
 import java.util.Map;

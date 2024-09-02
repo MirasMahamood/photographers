@@ -1,4 +1,4 @@
-package com.app.photographers.integration.controller;
+package com.app.photographers.integration;
 
 import com.app.photographers.integration.config.TestRedisConfig;
 import org.junit.jupiter.api.Test;
@@ -19,12 +19,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestRedisConfig.class)
 @AutoConfigureMockMvc
-public class PhotographerControllerIntegrationTest {
+public class PhotographerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    private static String API_URL = "/api/photographers";
+    private static final String API_URL = "/api/v1/photographers";
 
     @Test
     public void blockUnauthorizedUsers() throws Exception {
@@ -39,7 +39,7 @@ public class PhotographerControllerIntegrationTest {
     void createPhotographerSuccessfully() throws Exception {
         mockMvc.perform(post(API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"http://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
+                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"https://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("John Doe"));
     }
@@ -49,7 +49,7 @@ public class PhotographerControllerIntegrationTest {
     void getPhotographerByIdSuccessfully() throws Exception {
         mockMvc.perform(post(API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"http://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
+                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"https://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("John Doe"));
         mockMvc.perform(get(API_URL + "/{id}", 1L)
@@ -76,7 +76,7 @@ public class PhotographerControllerIntegrationTest {
     void getAllPhotographersByEventTypeSuccessfully() throws Exception {
         mockMvc.perform(post(API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"http://example.com/avatar.jpg\",\"eventType\":{\"id\":2}}"))
+                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"https://example.com/avatar.jpg\",\"eventType\":{\"id\":2}}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventType.id").value(2L));
 
@@ -94,7 +94,7 @@ public class PhotographerControllerIntegrationTest {
     void createPhotographerWithNullName() throws Exception {
         mockMvc.perform(post(API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":null,\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"http://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
+                        .content("{\"name\":null,\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"https://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("[Name is required]"));
     }
@@ -104,7 +104,7 @@ public class PhotographerControllerIntegrationTest {
     void createPhotographerWithLongName() throws Exception {
         mockMvc.perform(post(API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"" + "a".repeat(101) + "\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"http://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
+                        .content("{\"name\":\"" + "a".repeat(101) + "\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"https://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("[Name should not be more than 100 characters]"));
     }
@@ -114,7 +114,7 @@ public class PhotographerControllerIntegrationTest {
     void createPhotographerWithLongDescription() throws Exception {
         mockMvc.perform(post(API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"a\",\"description\":\"" + "a".repeat(1001) + "\",\"contact\":\"1234567890\",\"avatar\":\"http://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
+                        .content("{\"name\":\"a\",\"description\":\"" + "a".repeat(1001) + "\",\"contact\":\"1234567890\",\"avatar\":\"https://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("[Description should not be more than 1000 characters]"));
     }
@@ -124,7 +124,7 @@ public class PhotographerControllerIntegrationTest {
     void createPhotographerWithInvalidContact() throws Exception {
         mockMvc.perform(post(API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"" + "a".repeat(21) + "\",\"avatar\":\"http://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
+                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"" + "a".repeat(21) + "\",\"avatar\":\"https://example.com/avatar.jpg\",\"eventType\":{\"id\":1}}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("[Contact should not be more than 20 characters]"));
     }
@@ -134,7 +134,7 @@ public class PhotographerControllerIntegrationTest {
     void createPhotographerWithMissingEventType() throws Exception {
         mockMvc.perform(post(API_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"http://example.com/avatar.jpg\",\"eventType\":null}"))
+                        .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"https://example.com/avatar.jpg\",\"eventType\":null}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("[Event type is required]"));
     }
