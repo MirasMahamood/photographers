@@ -136,7 +136,7 @@ public class PhotographerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"John Doe\",\"description\":\"A skilled photographer\",\"contact\":\"1234567890\",\"avatar\":\"https://example.com/avatar.jpg\",\"eventType\":null}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("[Event type is required]"));
+                .andExpect(jsonPath("$.message").value("[Event type ID is required]"));
     }
 
     @Test
