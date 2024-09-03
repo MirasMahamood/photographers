@@ -1,8 +1,8 @@
 package com.app.photographers.model;
 
+import com.app.photographers.validation.EventTypeIdNotNull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,7 +35,7 @@ public class Photographer extends AuditModel {
     @Column
     private String avatar;
 
-    @NotNull(message = "Event type is required")
+    @EventTypeIdNotNull
     @ManyToOne
     @JoinColumn(name = "event_type_id", nullable = false)
     private EventType eventType;
