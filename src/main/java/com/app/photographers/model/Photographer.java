@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "photographers")
+@Table(name = "photographers", indexes = @Index(columnList = "modifiedDate", name = "idx_modified_date"))
 @Data
 public class Photographer extends AuditModel {
     @Id
